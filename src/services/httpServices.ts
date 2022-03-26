@@ -22,7 +22,7 @@ class HTTPService {
 
   constructor() {
     axios.defaults.timeout = TIMEOUT_SEC * 1000;
-    axios.defaults.baseURL = '';
+    axios.defaults.baseURL = 'https://min-api.cryptocompare.com/';
 
     axios.interceptors.request.use((request) => {
       this.logRequest(request);
