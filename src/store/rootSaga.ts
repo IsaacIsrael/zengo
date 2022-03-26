@@ -1,6 +1,6 @@
 import { all, fork } from 'redux-saga/effects';
-import { countSaga } from './duckers/count';
+import { cryptoSaga } from './duckers/crypto';
 
 export default function* rootSaga(): any {
-  return yield all([fork(countSaga)]);
+  return yield all([fork(cryptoSaga)]);
 }
