@@ -3,4 +3,6 @@ export const Colors = {
   PRIMARY: '#34C4BA',
   WHITE: '#ffffff',
   BLACK: '#000000',
+  RED: 'red',
+  GREEN: 'green',
 } as const;

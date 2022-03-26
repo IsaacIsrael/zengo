@@ -4,4 +4,5 @@ export interface Crypto {
   imageUrl: string;
   price: number;
   evaluation: 'up' | 'down';
+  isPin?: boolean;
 }
