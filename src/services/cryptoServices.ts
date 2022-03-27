@@ -4,6 +4,8 @@ import _ from 'lodash';
 import transformApiCryptoToCrypto from '../helper/transformApiCryptoToCrypto';
 import { Crypto } from '../types/Cryto';
 import httpServices from './httpServices';
+import transformApiCryptoQuoteToCryptoQuote from '../helper/transformApiCryptoQuoteToCryptoQuote';
+import { CryptoQuote } from '../types/CryptoQuote';
 
 export interface ApiCrypto {
   FROMSYMBOL: string;
@@ -16,6 +18,17 @@ interface ApiCryptos {
   RAW: Record<string, { USD: ApiCrypto }>;
 }
 
+export interface ApiCryptoQuote {
+  time: number;
+  close: number;
+}
+
+interface ApiHistoryCryptos {
+  Data: {
+    Data: ApiCryptoQuote[];
+  };
+}
+
 class CryptoService {
   async fetchCryptos(coins: string[]): Promise<Crypto[]> {
     const queryCoins = coins.join(',');
@@ -24,6 +37,15 @@ class CryptoService {
     );
     const { data } = response;
     return _.map(data.RAW, (crypto) => transformApiCryptoToCrypto(crypto.USD));
+  }
+
+  async fetchCryptoHistory(coinId: string, days: number): Promise<CryptoQuote[]> {
+    const response = await httpServices.get<ApiHistoryCryptos>(
+      `data/v2/histoday?fsym=${coinId}&tsym=USD&limit=${days}`,
+    );
+    const { data } = response;
+
+    return _.map(data.Data.Data, transformApiCryptoQuoteToCryptoQuote).reverse();
   }
 }
 
