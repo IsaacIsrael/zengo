@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable class-methods-use-this */
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import Logger from '../helper/Logger';

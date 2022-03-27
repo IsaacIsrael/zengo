@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import _ from 'lodash';
 import { Sizes } from '../constants/Sizes';
 import IconButton from './button/IconButton';

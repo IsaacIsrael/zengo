@@ -7,7 +7,6 @@ export type State = Record<string, Crypto | never | undefined>;
 export interface Actions {
   FETCH_COINS: 'FETCH_COINS';
   SET_COINS: 'SET_COINS';
-  UPDATE_COIN: 'UPDATE_COIN';
 }
 
 export interface FetchCoins extends AnyAction {
@@ -19,13 +18,7 @@ export interface SetCoins extends AnyAction {
   coins: Crypto[];
 }
 
-export interface UpdateCoin extends AnyAction {
-  type: Actions['UPDATE_COIN'];
-  coins: Crypto;
-}
-
 export interface Reducers {
   fetchCoins(): FetchCoins;
   setCoins(coins: Crypto[]): SetCoins;
-  updateCoin(coin: Crypto): UpdateCoin;
 }

@@ -134,7 +134,6 @@ const Home: Screen<'Home'> = ({ navigation }) => {
     value.isPin = !value.isPin;
 
     setCoinsList(_.orderBy(coinsList, ['isPin', order.id], ['desc', order.direction]));
-    dispatch(countReducer.updateCoin(value));
   };
 
   const onItemPress = (coin: Crypto) => () => {
