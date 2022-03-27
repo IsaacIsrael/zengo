@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, StyleProp, ViewStyle, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Sizes } from '../constants/Sizes';
+import Header from './Header';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -22,9 +23,10 @@ type Props = {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   scroll?: boolean;
+  title?: string | React.ReactNode;
 };
 
-const Container: React.FC<Props> = ({ children, style, scroll }) => {
+const Container: React.FC<Props> = ({ children, style, title, scroll }) => {
   const Content = scroll ? ScrollView : View;
   const contentStyle = scroll
     ? { contentContainerStyle: [styles.container, styles.scrollContainer, style] }
@@ -32,6 +34,7 @@ const Container: React.FC<Props> = ({ children, style, scroll }) => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
+      <Header title={title} />
       <Content {...contentStyle}>{children}</Content>
     </SafeAreaView>
   );
@@ -40,6 +43,7 @@ const Container: React.FC<Props> = ({ children, style, scroll }) => {
 Container.defaultProps = {
   style: {},
   scroll: false,
+  title: '',
 };
 
 export default Container;
