@@ -106,6 +106,7 @@ const Home: Screen<'Home'> = () => {
   const [coinsList, setCoinsList] = useState<Crypto[]>(coins);
   const isFetching = useIsRequestLoading(countActions.FETCH_COINS);
   const isFetched = useIsRequestSucceeded(countActions.FETCH_COINS);
+
   const dispatch = useDispatch();
 
   const fetchCoins = (): void => {
@@ -131,7 +132,9 @@ const Home: Screen<'Home'> = () => {
   const onActionPinPress = (value: Crypto) => () => {
     // eslint-disable-next-line no-param-reassign
     value.isPin = !value.isPin;
+
     setCoinsList(_.orderBy(coinsList, ['isPin', order.id], ['desc', order.direction]));
+    dispatch(countReducer.updateCoin(value));
   };
 
   const renderOrder: ListRenderItem<OrderOption> = ({ item: option }) => (

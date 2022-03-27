@@ -8,7 +8,6 @@ import { FetchCoins } from './types';
 import { RootState } from '../../rootReducer';
 import cryptoServices from '../../../services/cryptoServices';
 import { Crypto } from '../../../types/Cryto';
-import sleep from '../../../helper/sleep';
 
 function* fetchCoins(action: FetchCoins) {
   try {
@@ -17,6 +16,21 @@ function* fetchCoins(action: FetchCoins) {
 
     const coins: string[] = yield select(({ crypto }: RootState) => _.keys(crypto));
     const cryptos: Crypto[] = yield call([cryptoServices, cryptoServices.fetchCryptos], coins);
+
+    const pinCoins: Record<string, Crypto> = yield select(({ crypto }: RootState) =>
+      _(crypto)
+        .filter((item) => !!item?.isPin)
+        .keyBy('id')
+        .value(),
+    );
+
+    cryptos.forEach((item, index, array) => {
+      // eslint-disable-next-line no-param-reassign
+      array[index] = {
+        ...item,
+        isPin: !!pinCoins[item.id],
+      };
+    });
 
     yield put(reducer.setCoins(cryptos));
     yield put(requestsReducer.requestSucceeded(action));
