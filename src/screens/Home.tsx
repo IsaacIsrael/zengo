@@ -7,7 +7,6 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Screen } from '../types/Navigation';
 import Container from '../components/Container';
 import { Sizes } from '../constants/Sizes';
-import Title from '../components/text/Title';
 import Body from '../components/text/Body';
 import { RootState } from '../store';
 
@@ -20,6 +19,7 @@ import { Colors } from '../constants/Colors';
 import Button from '../components/button/Button';
 import IconButton from '../components/button/IconButton';
 import useIsRequestSucceeded from '../hooks/useIsRequestSucceeded';
+import Touchable from '../components/button/Touchable';
 
 const styles = StyleSheet.create({
   title: {
@@ -98,7 +98,7 @@ const orderList: OrderOption[] = [
   },
 ];
 
-const Home: Screen<'Home'> = () => {
+const Home: Screen<'Home'> = ({ navigation }) => {
   const [order, setOrderId] = useState<OrderOption>(orderList[0]);
   const coins = useSelector<RootState, Crypto[]>(({ crypto }) =>
     _(crypto).values().compact().orderBy(['isPin', order.id], ['desc', order.direction]).value(),
@@ -137,6 +137,10 @@ const Home: Screen<'Home'> = () => {
     dispatch(countReducer.updateCoin(value));
   };
 
+  const onItemPress = (coin: Crypto) => () => {
+    navigation.navigate('CryptoDetails', { coinId: coin.id });
+  };
+
   const renderOrder: ListRenderItem<OrderOption> = ({ item: option }) => (
     <Button
       title={option.label}
@@ -148,29 +152,30 @@ const Home: Screen<'Home'> = () => {
   );
 
   const renderCoins: ListRenderItem<Crypto> = ({ item: coin }) => (
-    <Row style={styles.coinContainer}>
-      <Image source={{ uri: coin.imageUrl }} style={styles.coinIcon} />
-      <Body style={styles.coinName}>{coin.name}</Body>
-      <Row style={styles.coinPriceWrapper}>
-        <Body style={styles.coinPrice}>{currencyFormat(coin.price)}</Body>
-        <FontAwesome
-          name={`caret-${coin.evaluation}`}
-          size={40}
-          color={coin.evaluation === 'up' ? Colors.GREEN : Colors.RED}
+    <Touchable onPress={onItemPress(coin)}>
+      <Row style={styles.coinContainer}>
+        <Image source={{ uri: coin.imageUrl }} style={styles.coinIcon} />
+        <Body style={styles.coinName}>{coin.name}</Body>
+        <Row style={styles.coinPriceWrapper}>
+          <Body style={styles.coinPrice}>{currencyFormat(coin.price)}</Body>
+          <FontAwesome
+            name={`caret-${coin.evaluation}`}
+            size={40}
+            color={coin.evaluation === 'up' ? Colors.GREEN : Colors.RED}
+          />
+        </Row>
+        <IconButton
+          name={coin.isPin ? 'minus' : 'plus'}
+          style={styles.coinAction}
+          iconSize={20}
+          onPress={onActionPinPress(coin)}
         />
       </Row>
-      <IconButton
-        name={coin.isPin ? 'minus' : 'plus'}
-        style={styles.coinAction}
-        iconSize={20}
-        onPress={onActionPinPress(coin)}
-      />
-    </Row>
+    </Touchable>
   );
 
   return (
-    <Container>
-      <Title style={styles.title}>Cryptos Coins</Title>
+    <Container title="Cryptos Coins">
       <FlatList
         data={orderList}
         renderItem={renderOrder}
